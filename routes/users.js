@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const auth = require("../middlewares/auth");
 
 router.get("/:username", async (req, res) => {
     try {
@@ -104,9 +105,13 @@ router.post("/login/:token", async (req, res) => {
     }
 });
 
-router.put("/:userId", async (req, res) => {
+router.put("/:userId", auth, async (req, res) => {
     try {
-        User.updateOne({ _id: req.params.userId }, { $set: req.body });
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $set: req.body }
+        );
+        res.json(updatedUser);
     } catch (error) {
         res.json(error);
     }

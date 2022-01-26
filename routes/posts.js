@@ -32,6 +32,7 @@ router.get("/", async (req, res) => {
                 $project: {
                     "userInfo.avatar": 1,
                     "userInfo._id": 1,
+                    "userInfo.nickname": 1,
                     likeInfo: 1,
                     content: 1,
                     link: 1,
