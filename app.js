@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-const port = process.env.port || 8080;
+const port = process.env.PORT || 8080;
 
 const postsRoute = require("./routes/posts");
 const usersRoute = require("./routes/users");

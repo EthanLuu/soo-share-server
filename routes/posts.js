@@ -5,9 +5,21 @@ const auth = require("../middlewares/auth");
 
 router.get("/", async (req, res) => {
     try {
+        const match = {};
+        if (req.query.userName) {
+            match.userName = req.query.userName;
+        }
+        if (req.query.tag) {
+            match.tag = req.query.tag;
+        }
         const posts = await Post.aggregate([
             {
-                $match: req.query
+                $match: match
+            },
+            {
+                $sort: {
+                    date: -1
+                }
             },
             {
                 $lookup: {
@@ -42,9 +54,10 @@ router.get("/", async (req, res) => {
                 }
             },
             {
-                $sort: {
-                    date: -1
-                }
+                $skip: +req.query.skip || 0
+            },
+            {
+                $limit: +req.query.limit || 10
             }
         ]);
 
@@ -89,6 +102,7 @@ router.post("/", auth, async (req, res) => {
                 $project: {
                     "userInfo.avatar": 1,
                     "userInfo._id": 1,
+                    "userInfo.nickname": 1,
                     likeInfo: 1,
                     content: 1,
                     link: 1,
