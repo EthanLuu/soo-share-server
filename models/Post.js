@@ -5,6 +5,7 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    keywords: String,
     link: String,
     userName: String,
     date: {
@@ -13,5 +14,7 @@ const PostSchema = mongoose.Schema({
     },
     tag: String
 });
+
+PostSchema.index({ keywords : 'text', userName : 'text' })
 
 module.exports = mongoose.model("posts", PostSchema);
