@@ -14,12 +14,16 @@ const usersRoute = require("./routes/users");
 const likesRoute = require("./routes/likes");
 const tagsRoute = require("./routes/tags");
 const imageRoute = require("./routes/image");
+const subscribeRoute = require("./routes/subscribes");
+const bookmarkRoute = require("./routes/bookmarks");
 
 app.use("/posts", postsRoute);
 app.use("/users", usersRoute);
 app.use("/likes", likesRoute);
 app.use("/tags", tagsRoute);
 app.use("/image", imageRoute);
+app.use("/subscribes", subscribeRoute);
+app.use("/bookmarks", bookmarkRoute);
 
 mongoose.connect(
     process.env.DB_URI,

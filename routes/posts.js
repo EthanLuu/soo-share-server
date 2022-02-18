@@ -3,6 +3,7 @@ const router = express.Router();
 const Post = require("../models/Post");
 const auth = require("../middlewares/auth");
 const jieba = require("nodejieba");
+const mongoose = require("mongoose");
 
 const commonAggregations = [
     {
@@ -53,6 +54,36 @@ const getPaginateAggregations = (req) => [
     }
 ];
 
+const getFilteredPosts = async (req, res) => {
+    const match = {};
+    if (req.body.subscribeList) {
+        const userIdList = [];
+        req.body.subscribeList.map((userId) => {
+            userIdList.push(mongoose.Types.ObjectId(userId));
+        });
+        match["userInfo._id"] = {
+            $in: userIdList
+        };
+    } else if (req.body.bookmarkedList) {
+        const postIdList = [];
+        req.body.bookmarkedList.map((postId) => {
+            postIdList.push(mongoose.Types.ObjectId(postId));
+        });
+        console.log(postIdList)
+        match["_id"] = {
+            $in: postIdList
+        };
+    }
+    const posts = await Post.aggregate([
+        ...commonAggregations,
+        {
+            $match: match
+        },
+        ...getPaginateAggregations(req)
+    ]);
+    res.json(posts);
+};
+
 router.get("/", async (req, res) => {
     try {
         const match = {};
@@ -78,8 +109,12 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
-    const post = new Post(req.body);
     try {
+        if (req.body.subscribeList || req.body.bookmarkedList) {
+            getFilteredPosts(req, res);
+            return;
+        }
+        const post = new Post(req.body);
         post.keywords = jieba.cut(post.content).join(" ");
         const createdPost = await post.save();
         const data = await Post.aggregate([
