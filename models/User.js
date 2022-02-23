@@ -17,6 +17,11 @@ const UserSchema = mongoose.Schema({
     avatar: {
         type: String
     },
+    roleNumer: {
+        type: Number,
+        required: true,
+        default: 1
+    },
     token: String
 });
 
