@@ -16,6 +16,7 @@ const tagsRoute = require("./routes/tags");
 const imageRoute = require("./routes/image");
 const subscribeRoute = require("./routes/subscribes");
 const bookmarkRoute = require("./routes/bookmarks");
+const statisticsRoute = require("./routes/statistics");
 
 app.use("/posts", postsRoute);
 app.use("/users", usersRoute);
@@ -24,6 +25,7 @@ app.use("/tags", tagsRoute);
 app.use("/image", imageRoute);
 app.use("/subscribes", subscribeRoute);
 app.use("/bookmarks", bookmarkRoute);
+app.use("/statistics", statisticsRoute);
 
 mongoose.connect(
     process.env.DB_URI,
