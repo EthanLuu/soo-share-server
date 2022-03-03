@@ -17,7 +17,7 @@ const UserSchema = mongoose.Schema({
     avatar: {
         type: String
     },
-    roleNumer: {
+    roleNumber: {
         type: Number,
         required: true,
         default: 1
