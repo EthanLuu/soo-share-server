@@ -7,9 +7,6 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "engines": {
-    "node": "14.x"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EthanLuu/soo-share-server.git"

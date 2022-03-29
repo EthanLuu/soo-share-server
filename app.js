@@ -17,6 +17,7 @@ const imageRoute = require("./routes/image");
 const subscribeRoute = require("./routes/subscribes");
 const bookmarkRoute = require("./routes/bookmarks");
 const statisticsRoute = require("./routes/statistics");
+const reportsRoute = require("./routes/reports");
 
 app.use("/posts", postsRoute);
 app.use("/users", usersRoute);
@@ -26,6 +27,7 @@ app.use("/image", imageRoute);
 app.use("/subscribes", subscribeRoute);
 app.use("/bookmarks", bookmarkRoute);
 app.use("/statistics", statisticsRoute);
+app.use("/reports", reportsRoute);
 
 mongoose.connect(
     process.env.DB_URI,

@@ -69,7 +69,6 @@ const getFilteredPosts = async (req, res) => {
         req.body.bookmarkedList.map((postId) => {
             postIdList.push(mongoose.Types.ObjectId(postId));
         });
-        console.log(postIdList)
         match["_id"] = {
             $in: postIdList
         };
