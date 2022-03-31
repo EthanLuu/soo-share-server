@@ -22,6 +22,10 @@ const UserSchema = mongoose.Schema({
         required: true,
         default: 1
     },
+    email: {
+        type: String,
+        default: ""
+    },
     token: String
 });
 

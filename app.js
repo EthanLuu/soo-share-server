@@ -18,6 +18,7 @@ const subscribeRoute = require("./routes/subscribes");
 const bookmarkRoute = require("./routes/bookmarks");
 const statisticsRoute = require("./routes/statistics");
 const reportsRoute = require("./routes/reports");
+const verficationRoute = require("./routes/verification");
 
 app.use("/posts", postsRoute);
 app.use("/users", usersRoute);
@@ -28,6 +29,7 @@ app.use("/subscribes", subscribeRoute);
 app.use("/bookmarks", bookmarkRoute);
 app.use("/statistics", statisticsRoute);
 app.use("/reports", reportsRoute);
+app.use("/verification", verficationRoute);
 
 mongoose.connect(
     process.env.DB_URI,

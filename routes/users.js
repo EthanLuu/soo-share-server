@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Verification = require("../models/Verification");
 const auth = require("../middlewares/auth");
 
 router.get("/:username", async (req, res) => {
@@ -17,20 +18,29 @@ router.get("/:username", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     try {
-        const { username, password, nickname, avatar } = req.body;
-
-        // check if username existed
-        const oldUser = await User.findOne({ username });
+        const { username, password, nickname, avatar, email, code } = req.body;
+        console.log(username, email);
+        const oldUser =
+            (await User.findOne({ username })) ||
+            (await User.findOne({ email }));
         if (oldUser) {
             return res
                 .status(409)
-                .send("用户名已存在，请登录或更换用户名进行注册。");
+                .send("用户名或邮箱已存在。");
+        }
+        const verification = await Verification.findOne({ email });
+        if (!verification || verification.get("code") !== code) {
+            return res.status(409).send("请确认邮箱验证码正确。");
+        }
+        if (verification.get("expire_time") < new Date()) {
+            return res.status(409).send("邮箱验证码已过期，请重新验证。");
         }
 
         const encryptedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             username,
+            email,
             password: encryptedPassword,
             nickname,
             avatar
@@ -61,8 +71,10 @@ router.post("/login", async (req, res) => {
                 return res.status(400).send("token失效");
             }
         }
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const { username, password, eamil } = req.body;
+        const user =
+            (await User.findOne({ username })) ||
+            (await User.findOne({ eamil }));
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign(
                 { user_id: user._id, username },
