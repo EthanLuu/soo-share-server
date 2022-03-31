@@ -24,9 +24,7 @@ router.post("/register", async (req, res) => {
             (await User.findOne({ username })) ||
             (await User.findOne({ email }));
         if (oldUser) {
-            return res
-                .status(409)
-                .send("用户名或邮箱已存在。");
+            return res.status(409).send("用户名或邮箱已存在。");
         }
         const verification = await Verification.findOne({ email });
         if (!verification || verification.get("code") !== code) {
@@ -63,18 +61,19 @@ router.post("/login", async (req, res) => {
     try {
         const token = req.headers?.authorization;
         if (token) {
-            const userName = jwt.verify(token, process.env.TOKEN_KEY).username;
-            const user = await User.findOne({ userName });
+            const username = jwt.verify(token, process.env.TOKEN_KEY).username;
+            console.log(token, username);
+            const user = await User.findOne({ username });
             if (user) {
                 return res.status(200).json(user);
             } else {
                 return res.status(400).send("token失效");
             }
         }
-        const { username, password, eamil } = req.body;
+        const { username, password, email } = req.body;
         const user =
             (await User.findOne({ username })) ||
-            (await User.findOne({ eamil }));
+            (await User.findOne({ email }));
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign(
                 { user_id: user._id, username },
