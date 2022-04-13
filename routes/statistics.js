@@ -33,7 +33,19 @@ router.get("/", async (req, res) => {
 router.get("/posts", async (req, res) => {
     try {
         const cnt = Post.length;
-        res.json({ cnt });
+        const posts = await Post.aggregate([
+            {
+                $group: {
+                    _id: {
+                        $dateToString: { format: "%Y-%m-%d", date: "$date" }
+                    },
+                    count: {
+                        $sum: 1
+                    }
+                }
+            }
+        ]);
+        res.json({ cnt, posts });
     } catch (error) {
         res.error(error);
     }

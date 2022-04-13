@@ -62,7 +62,6 @@ router.post("/login", async (req, res) => {
         const token = req.headers?.authorization;
         if (token) {
             const username = jwt.verify(token, process.env.TOKEN_KEY).username;
-            console.log(token, username);
             const user = await User.findOne({ username });
             if (user) {
                 return res.status(200).json(user);
